@@ -46,8 +46,28 @@ def new_state():
 	if not request.get_json().get('name'):
 		abort(400, description="Missing name")
 	
-	state = State()
-	state.name = request.get_json()['name']
-	state.save()
+	instance = State()
+	instance.name = request.get_json()['name']
+	instance.save()
 
-	return make_response(jsonify(state.to_dict()), 201)
+	return make_response(jsonify(instance.to_dict()), 201)
+
+def update_state(state_id):
+	""" updates a state """
+	state = storage.get("State", state_id)
+	if not state:
+		abort(404)
+
+	if not request.get_json():
+		abort(400, description="Not a JSON")
+
+	for key, value in request.get_json().items():
+		if key == "id" or key == "created_at" or key == "updated_at":
+			continue
+		else:
+			setattr(state, key, value)
+
+	storage.save()
+	return make_response(jsonify(state.to_dict()), 200)
+
+
