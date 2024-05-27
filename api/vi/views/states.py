@@ -52,6 +52,7 @@ def new_state():
 
 	return make_response(jsonify(instance.to_dict()), 201)
 
+@app_views.route('/states/<states_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
 	""" updates a state """
 	state = storage.get("State", state_id)
@@ -69,5 +70,4 @@ def update_state(state_id):
 
 	storage.save()
 	return make_response(jsonify(state.to_dict()), 200)
-
 
